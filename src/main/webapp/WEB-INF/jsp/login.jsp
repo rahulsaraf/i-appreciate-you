@@ -98,6 +98,11 @@ body {
                     <h4 style="text-align: center;">OR</h4>
                     <br>
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    
+					<fb:login-button 
+					  scope="public_profile,email"
+					  onlogin="checkLoginState();">
+					</fb:login-button>
                 </div>
                <!-- <div class="panel-footer">Not Registered? <a href="#" class="">Register here</a>
                 </div>
@@ -131,5 +136,25 @@ body {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '283969815337153',
+      xfbml      : true,
+      version    : 'v2.6'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+    
+    
   </body>
 </html>

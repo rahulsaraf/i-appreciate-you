@@ -12,8 +12,9 @@
 
     
 	<context:component-scan base-package="com.webapp.controller"/>
+	<context:component-scan base-package="com.webapp.service"/>
 	<mvc:annotation-driven/>
-	<mvc:resources mapping="/static/**" location="/static/images/" />
+	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:default-servlet-handler />
 	
 	
