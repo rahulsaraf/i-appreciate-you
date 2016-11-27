@@ -290,13 +290,13 @@ body
 }
 .profile-bnr {
 	min-height: 500px;
-	background: url(../images/profile-bnr.jpg) no-repeat;
+	background: url(/iappreciateyou/static/images/profile-bnr.jpg) no-repeat;
 	background-size: cover;
 }
 .user-profile-bnr {
 	min-height: 250px;
 	padding-top: 65px;
-	background: url(../images/user-bg.jpg) no-repeat;
+	background: url(/iappreciateyou/static/images/profile-bg/default.jpg) no-repeat;
 	background-size: cover;
 }
 .user-profile-bnr h2 {
@@ -1233,6 +1233,18 @@ iframe {
 	padding: 0 30px;
 	margin-bottom: 15px;
 }
+
+.banr-head .login-sec select {
+	background: #424242;
+	border-radius: 30px;
+	border: none;
+	height: 40px;
+	font-size: 14px;
+	padding: 0 30px;
+	margin-bottom: 15px;
+	color: #fff;  
+}
+
 .banr-head .login-sec .uou-tabs form {
 	padding: 40px;
 	display: inline-block;
@@ -2982,14 +2994,7 @@ CANVAS PAGE STYLE
 	padding: 10px 20px;
 	background: #eeeeee;
 }
-.profile-company-content.main-user .nav-tabs li a:hover {
-	background: #f8f8f8;
-	color: #333333;
-}
-.profile-company-content.main-user .nav-tabs li.active a {
-	background: #f8f8f8;
-	color: #333333;
-}
+
 .profile-company-content.main-user .tab-content #profile {
 	background: none;
 }

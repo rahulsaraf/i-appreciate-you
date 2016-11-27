@@ -7,17 +7,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TIGER - Social Network HTML Template</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<title>I Appreciate You - Profile</title>
 
 <!-- Fonts Online -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
 <!-- Style Sheet -->
-<link rel="stylesheet" href="/iappreaciateyou/static/css/owl.carousel.css">
-<link rel="stylesheet" href="/iappreaciateyou/static/css/style.css">
-<link rel="stylesheet" href="/iappreaciateyou/static/css/main-style.css">
-<link rel="stylesheet" href="/iappreaciateyou/static/css/style.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/owl.carousel.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/style.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/main-style.css">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,6 +25,20 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+<style>
+.kv-avatar .file-preview-frame,.kv-avatar .file-preview-frame:hover {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+}
+.img-profile > input {
+    display: none;
+}
+</style>
+
 </head>
 
 <body>
@@ -32,7 +46,7 @@
  
   <div class="box-shadow-for-ui">
     <div class="uou-block-2b">
-      <div class="container"> <a href="#" class="logo"><img src="/iappreaciateyou/static/images/logo.png" alt=""></a> <a href="#" class="mobile-sidebar-button mobile-sidebar-toggle"><span></span></a>
+      <div class="container"> <a href="#" class="logo"><img src="/iappreciateyou/static/images/logo.png" alt=""></a> <a href="#" class="mobile-sidebar-button mobile-sidebar-toggle"><span></span></a>
       </div>
     </div>
     <!-- end .uou-block-2b --> 
@@ -40,17 +54,29 @@
   
   <div class="compny-profile"> 
     <!-- SUB Banner -->
+    
     <div class="profile-bnr user-profile-bnr">
       <div class="container">
         <div class="pull-left">
-          <h2>Michael Peterson</h2>
-          <h5>Front-End Developer</h5>
+          <h2>${user.fullName}</h2>
+          <h5>${user.currentOrg}</h5>
         </div>
         
         <!-- Top Riht Button -->
         <div class="right-top-bnr">
-          <div class="connect"> <a href="#." data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus"></i> Connect</a> <a href="#."><i class="fa fa-share-alt"></i> Share</a>
+          <div class="connect">
+          
+          <a href="#." class="upload"><i class="fa fa-upload"></i> Upload Cover Photo</a>
+          <a href="#." data-toggle="modal" data-target="#myModal"><i class="fa fa-user-plus"></i> Connect</a> <a href="#."><i class="fa fa-share-alt"></i> Share</a> <a href="#." class="logout"><i class="fa fa-sign-out"></i> Logout</a>
             <div class="bt-ns"> <a href="#."><i class="fa fa-bookmark-o"></i> </a> <a href="#."><i class="fa fa-envelope-o"></i> </a> <a href="#."><i class="fa fa-exclamation"></i> </a> </div>
+            <form name = "avatarBgUpload" action="avatarBgUpload" method="post" enctype="multipart/form-data" id="myForm" style="visibility:hidden;">
+  			<input type="file" name="file" />
+  			<input type="hidden" name="user" value="${user.userId}"/>
+  			<input type="submit" name="upload" value="Submit"/>
+		</form>
+		<form action="logout" method="post" enctype="multipart/form-data" id="logoutForm" style="visibility:hidden;">
+		<input type="submit" name="logout" value="Submit"/>
+		</form>
           </div>
         </div>
       </div>
@@ -63,25 +89,12 @@
               <h6><a class="close" href="#." data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></a> Send Message</h6>
               
               <!-- Forms -->
-              <form action="#">
+              <form action="addConnection">
                 <ul class="row">
                   <li class="col-xs-6">
-                    <input type="text" placeholder="First Name ">
-                  </li>
-                  <li class="col-xs-6">
-                    <input type="text" placeholder="Last Name">
-                  </li>
-                  <li class="col-xs-6">
-                    <input type="text" placeholder="Country">
-                  </li>
-                  <li class="col-xs-6">
-                    <input type="text" placeholder="Email">
-                  </li>
-                  <li class="col-xs-12">
-                    <textarea placeholder="Your Message"></textarea>
-                  </li>
-                  <li class="col-xs-12">
-                    <button class="btn btn-primary">Send message</button>
+                    <input id = "connectEmail" type="text" placeholder="Name or Email" name="nameEmail">
+                    <input type="hidden" id="connectEmailId" name="userId">
+                    <button class="btn btn-primary">Connect</button>
                   </li>
                 </ul>
               </form>
@@ -99,40 +112,218 @@
           <!-- Nav Tabs -->
           <div class="col-md-12">
             <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#profile">Profile</a></li>
-              <li><a data-toggle="tab" href="#jobs">Jobs</a></li>
-              <li><a data-toggle="tab" href="#contact">Contact</a></li>
-              <li><a data-toggle="tab" href="#portfolio">Portfolio</a></li>
-              <li><a data-toggle="tab" href="#blog-tab">Blog Posts</a></li>
+              <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
               <li><a data-toggle="tab" href="#Con-tab">Connections</a></li>
-              <li><a data-toggle="tab" href="#flowrs-tabs">Followers (241)</a></li>
-              <li><a data-toggle="tab" href="#foll-tabs">Following</a></li>
+              <li><a data-toggle="tab" href="#profile">Profile</a></li>
             </ul>
           </div>
+         
           
           <!-- Tab Content -->
           <div class="col-md-12">
             <div class="tab-content"> 
               
+              <div id="home" class="tab-pane fade in active">
+              
+              <!-- Tab Content -->
+          <div class="col-md-8">
+            <div class="network">
+              <h4>Network</h4>
+              
+              <!-- Nav Tabs -->
+              <ul class="nav nav-tabs" style="position:relative; top:0px;">
+                <li class="active"><a data-toggle="tab" href="#connec">Post Appreciation</a></li>
+                <li><a id="appreciationsPosted" onClick="loadCss()" data-toggle="tab" href="#flow">Appreciations Posted</a></li>
+                <li><a id="appreciationsReceived" data-toggle="tab" href="#flowing">Appreciations Received</a></li>
+              </ul>
+              
+              <!-- Tab Content -->
+              <div class="tab-content"> 
+                
+                <!-- Connections -->
+                <div id="connec" class="tab-pane fade in active">
+                  <div class="net-work-in"> 
+                   
+                     
+                    <!-- Members -->
+                    <div class="main-mem"> 
+                    <form action="postApp" method="POST">
+                    <label for="nameEmail">Name:</label>
+                      <input id = "email_val" type="text" placeholder="Name or Email Address" name="nameEmail">
+                      <input id = "email_val_id" type="hidden" name="userId">
+                      <label for="message">Message:</label>
+                   	  <textarea placeholder="Your Message" name="message"></textarea>
+                   	 	<input type="hidden" name="happy" id="happy" value="0"> 
+                   	  <input type="hidden" name="helpful" id="helpful" value="0">
+                   	  <input type="hidden" name="easygoing" id="easygoing" value="0">
+                   	  <input type="hidden" name="fun" id="fun" value="0">
+                   	  <input type="hidden" name="respectful" id="respectful" value="0">
+                   	  <input type="hidden" name="confident" id="confident" value="0">
+                   	  <input type="hidden" name="emotional" id="emotional" value="0">
+                   	  <input type="hidden" name="motivated" id="motivated" value="0">
+                   	  <input type="hidden" name="compassionate" id="compassionate" value="0">
+                   	  <label for="message">Highlight Qualities related to this Appreciation:</label></br>
+                   	 	  <a class = "main-mem" id="happy_b" class="btn btn-primary">Happy</a>
+                   	 	  <a class = "main-mem" id="helpful_b" class="btn btn-primary">Helpful</a>
+                   	 	  <a class = "main-mem" id="easygoing_b" class="btn btn-primary">Easygoing</a>
+                   	 	  <a class = "main-mem" id="fun_b" class="btn btn-primary">Fun</a>
+                   	 	
+                   	 	  <a class = "main-mem" id="respectful_b" class="btn btn-primary">Respectful</a>
+                   	 	    <br>
+                   	 	  <a class = "main-mem" id="confident_b" class="btn btn-primary">Confident</a>
+                   	 	  <a class = "main-mem" id="emotional_b" class="btn btn-primary">Emotional</a>
+                   	 	  <a class = "main-mem" id="motivated_b" class="btn btn-primary">Motivated</a>
+                   	 	  <a class = "main-mem" id="compassionate_b" class="btn btn-primary">Compassionate</a>
+                   	 	  <br>
+                   	 	  <button class="btn btn-primary">Send message</button>
+                   
+                    </form>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Followers -->
+                <div id="flow" class="tab-pane fade">
+                  <div class="net-work-in">
+                  
+                  
+                <div class="table-responsive">
+				
+				<table class="table table-hover">
+					<tbody>
+						<c:forEach items="${appreciationsPosted}" var="record" varStatus="recordIndex">
+							<tr>
+							<td>
+							<form class="form-horizontal" name="savePost" action="savePost"
+					method="GET">
+					<fieldset>
+							<div class="main-mem" > 
+							 <label for="nameEmail">Receiver's Name:</label> <input id = "email_val" type="text" placeholder="Name or Email Address" name="nameEmail" value="${record.receiverId.fullName}<${record.receiverId.emailAddress}>" readonly>
+		                      <input id = "email_val_id" type="hidden" name="userId" value = "${record.receiverId.userId}">
+		                      <input id = "postId" type="hidden" name="postId" value = "${record.postId}">
+		                   	 <label for="message">Message:</label><textarea id="text_message" placeholder="Your Message" name="message">${record.message}</textarea>
+		                   	 	<input type="hidden" name="happy" id="happy_${recordIndex.index}"  value = "${record.happy}"> 
+		                   	  <input type="hidden" name="helpful" id="helpful_${recordIndex.index}"  value = "${record.helpful}">
+		                   	  <input type="hidden" name="easygoing" id="easygoing_${recordIndex.index}"  value = "${record.easygoing}">
+		                   	  <input type="hidden" name="fun" id="fun_${recordIndex.index}"  value = "${record.fun}">
+		                   	  <input type="hidden" name="respectful" id="respectful_${recordIndex.index}"  value = "${record.respectful}">
+		                   	  <input type="hidden" name="confident" id="confident_${recordIndex.index}"  value = "${record.confident}">
+		                   	  <input type="hidden" name="emotional" id="emotional_${recordIndex.index}"  value = "${record.emotional}">
+		                   	  <input type="hidden" name="motivated" id="motivated_${recordIndex.index}" value = "${record.motivated}">
+		                   	  <input type="hidden" name="compassionate" id="compassionate_${recordIndex.index}" value = "${record.compassionate}">
+		                   	  
+		                   	  <label for="message">Highlighted Qualities related to this Appreciation:</label></br>
+		                   	 	  <a class = "main-mem" id="happy_b_${recordIndex.index}" class="btn btn-primary">Happy</a>
+		                   	 	  <a class = "main-mem" id="helpful_b_${recordIndex.index}" class="btn btn-primary">Helpful</a>
+		                   	 	  <a class = "main-mem" id="easygoing_b_${recordIndex.index}" class="btn btn-primary">Easygoing</a>
+		                   	 	  <a class = "main-mem" id="fun_b_${recordIndex.index}" class="btn btn-primary">Fun</a>
+		                   	 	
+		                   	 	  <a class = "main-mem" id="respectful_b_${recordIndex.index}" class="btn btn-primary">Respectful</a>
+		                   	 	    <br>
+		                   	 	  <a class = "main-mem" id="confident_b_${recordIndex.index}" class="btn btn-primary">Confident</a>
+		                   	 	  <a class = "main-mem" id="emotional_b_${recordIndex.index}" class="btn btn-primary">Emotional</a>
+		                   	 	  <a class = "main-mem" id="motivated_b_${recordIndex.index}" class="btn btn-primary">Motivated</a>
+		                   	 	  <a class = "main-mem" id="compassionate_b_${recordIndex.index}" class="btn btn-primary">Compassionate</a>
+		                   	 	  <br>
+		                   	 	  <button class="btn btn-primary" >Update Post</button>
+		                   	 	 
+							</div>
+							</fieldset>
+					</form>
+							</td>
+							
+							</tr>
+							
+						</c:forEach>
+					</tbody>
+				</table>
+				
+				</div>
+                  
+                  
+                  
+                  
+                  </div>
+                </div>
+                
+                <!-- Following -->
+                <div id="flowing" class="tab-pane fade">
+                  <div class="net-work-in"> 
+                    <div class="table-responsive">
+				<!-- <form class="form-horizontal" name="saveAppreciation" action="saveAppreciation"
+					method="GET">
+					<fieldset> -->
+				<table class="table table-hover">
+					<tbody>
+						<c:forEach items="${appreciationsReceived}" var="record" varStatus="recordIndex">
+							<tr>
+							<td>
+							<div class="main-mem" > 
+							 <label for="nameEmail">Sender's Name:</label> <input id = "email_val" type="text" placeholder="Name or Email Address" name="nameEmail" value="${record.senderId.fullName}<${record.senderId.emailAddress}>" readonly>
+		                      <input id = "email_val_id" type="hidden" name="userId" value = "${record.senderId.userId}">
+		                      <input id = "postId" type="hidden" name="postId" value = "${record.postId}">
+		                   	 <label for="message">Message:</label><textarea id="text_message" placeholder="Your Message" name="message" readonly>${record.message}</textarea>
+		                   	 	<input type="hidden" name="happy" id="happy_${recordIndex.index}"  value = "${record.happy}"> 
+		                   	  <input type="hidden" name="helpful" id="helpful_${recordIndex.index}"  value = "${record.helpful}">
+		                   	  <input type="hidden" name="easygoing" id="easygoing_${recordIndex.index}"  value = "${record.easygoing}">
+		                   	  <input type="hidden" name="fun" id="fun_${recordIndex.index}"  value = "${record.fun}">
+		                   	  <input type="hidden" name="respectful" id="respectful_${recordIndex.index}"  value = "${record.respectful}">
+		                   	  <input type="hidden" name="confident" id="confident_${recordIndex.index}"  value = "${record.confident}">
+		                   	  <input type="hidden" name="emotional" id="emotional_${recordIndex.index}"  value = "${record.emotional}">
+		                   	  <input type="hidden" name="motivated" id="motivated_${recordIndex.index}" value = "${record.motivated}">
+		                   	  <input type="hidden" name="compassionate" id="compassionate_${recordIndex.index}" value = "${record.compassionate}">
+		                   	  
+		                   	  <label for="message">Highlighted Qualities related to this Appreciation:</label></br>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;" class = "main-mem" id="happy_b_${recordIndex.index}" class="btn btn-primary">Happy</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="helpful_b_${recordIndex.index}" class="btn btn-primary">Helpful</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="easygoing_b_${recordIndex.index}" class="btn btn-primary">Easygoing</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="fun_b_${recordIndex.index}" class="btn btn-primary">Fun</a>
+		                   	 	
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="respectful_b_${recordIndex.index}" class="btn btn-primary">Respectful</a>
+		                   	 	    <br>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="confident_b_${recordIndex.index}" class="btn btn-primary">Confident</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="emotional_b_${recordIndex.index}" class="btn btn-primary">Emotional</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="motivated_b_${recordIndex.index}" class="btn btn-primary">Motivated</a>
+		                   	 	  <a style = "pointer-events: none !important;cursor: default;color:Gray;"class = "main-mem" id="compassionate_b_${recordIndex.index}" class="btn btn-primary">Compassionate</a>
+		                   	 	  <br>
+		                   	 	 
+							</div>
+							
+							</td>
+							
+							</tr>
+							
+						</c:forEach>
+					</tbody>
+				</table>
+				<!-- </fieldset>
+					</form> -->
+				</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+              
+              </div>
+              
               <!-- PROFILE -->
-              <div id="profile" class="tab-pane fade in active">
+              <div id="profile" class="tab-pane fade in">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="profile-main">
                       <h3>About</h3>
                       <div class="profile-in">
                         <div class="media-left">
-                          <div class="img-profile"> <img class="media-object" src="images/avatar-1.jpg" alt=""> </div>
+                       
+                          <div class="img-profile"> 
+                          <img id="profile-img" class="media-object" src="/iappreciateyou/static/images/profile/" alt=""> 
+                          </div>
+                         
                         </div>
                         <div class="media-body">
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit, maxime, excepturi, mollitia, voluptatibus similique aliquidautem 
-                            laudantium sapiente ad enim ipsa modi labo rum accusantium deleniti neque architecto vitae.<br>
-                            <br>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea, nihil, dolores, culpa ullam vero ipsum placeat accusamus nemo
-                            itate id molestiae consectetur quae pariatur repudi andae vel ex quaerat nam iusto aliquid laborum quia adipisci aut ut imcati 
-                            nisi deleniti tempore maxime sequi fugit reiciendis libero quo. Rerum, assumenda. <br>
-                            <br>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, at nemo inventore temporibus corporis suscipit.</p>
+                          <p>Background Intro</p>
                         </div>
                       </div>
                     </div>
@@ -334,246 +525,22 @@
                 </div>
               </div>
               
-              <!-- Jobs -->
-              <div id="jobs" class="tab-pane fade">
-                <div class="header-listing">
-                  <h6>Sort by</h6>
-                  <div class="custom-select-box">
-                    <select name="order" class="custom-select">
-                      <option value="0">Most popular</option>
-                      <option value="1">The latest</option>
-                      <option value="2">The best rating</option>
-                    </select>
-                  </div>
-                  <ul class="listing-views">
-                    <li class="active"><a href="#"><i class="fa fa-list"></i></a></li>
-                    <li><a href="#"><i class="fa fa-th"></i></a></li>
-                    <li><a href="#"><i class="fa fa-th-large"></i></a></li>
-                  </ul>
-                </div>
-                <div class="listing listing-1">
-                  <div class="listing-section">
-                    <div class="listing-ver-3">
-                      <div class="listing-heading">
-                        <h5>Front-End Web Developer</h5>
-                        <ul class="bookmark list-inline">
-                          <li><a href="#"><i class="fa fa-bookmark"></i></a></li>
-                          <li><a href="#"><i class="fa fa-eye"></i></a></li>
-                          <li><a href="#"><i class="fa fa-share"></i></a></li>
-                        </ul>
-                      </div>
-                      <div class="listing-inner">
-                        <div class="listing-content">
-                          <h6 class="title-company">Mars Planet Telecommunications Inc.</h6>
-                          <span class="location"> <i class="fa fa-map-marker"></i> Manhattan, New york, USA </span> <span class="type-work full-time"> Full Time </span>
-                          <p>Proin gravida nibh vel velit auctor aliquet aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio pellentesque habitant morbi tristique senectus et netus et malesuada. <a href="single_job.html">read more</a></p>
-                          <h6 class="title-tags">Skills required:</h6>
-                          <ul class="tags list-inline">
-                            <li><a href="#">Javascript</a></li>
-                            <li><a href="#">Wordpress</a></li>
-                            <li><a href="#">Presta</a></li>
-                            <li><a href="#">Sass</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="listing-tabs">
-                        <ul>
-                          <li><a href="#"><i class="fa fa-envelope"></i> email@mail.com</a></li>
-                          <li><a href="#"><i class="fa fa-phone"></i> 012 345 678</a></li>
-                          <li><a href="#"><i class="fa fa-globe"></i> www.webstite.com</a></li>
-                          <li class="share-button"> <a href="#"><i class="fa fa-share"></i> Share</a>
-                            <div class="contact-share">
-                              <ul>
-                                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
-                              </ul>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="listing-ver-3">
-                      <div class="listing-heading">
-                        <h5>Front-End Web Developer</h5>
-                        <ul class="bookmark list-inline">
-                          <li><a href="#"><i class="fa fa-bookmark"></i></a></li>
-                          <li><a href="#"><i class="fa fa-eye"></i></a></li>
-                          <li><a href="#"><i class="fa fa-share"></i></a></li>
-                        </ul>
-                      </div>
-                      <div class="listing-inner">
-                        <div class="listing-content">
-                          <h6 class="title-company">Mars Planet Telecommunications Inc.</h6>
-                          <span class="location"> <i class="fa fa-map-marker"></i> Manhattan, New york, USA </span> <span class="type-work full-time"> Full Time </span>
-                          <p>Proin gravida nibh vel velit auctor aliquet aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris. Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio pellentesque habitant morbi tristique senectus et netus et malesuada. <a href="single_job.html">read more</a></p>
-                          <h6 class="title-tags">Skills required:</h6>
-                          <ul class="tags list-inline">
-                            <li><a href="#">Javascript</a></li>
-                            <li><a href="#">Wordpress</a></li>
-                            <li><a href="#">Presta</a></li>
-                            <li><a href="#">Sass</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="listing-tabs">
-                        <ul>
-                          <li><a href="#"><i class="fa fa-envelope"></i> email@mail.com</a></li>
-                          <li><a href="#"><i class="fa fa-phone"></i> 012 345 678</a></li>
-                          <li><a href="#"><i class="fa fa-globe"></i> www.webstite.com</a></li>
-                          <li class="share-button"> <a href="#"><i class="fa fa-share"></i> Share</a>
-                            <div class="contact-share">
-                              <ul>
-                                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus-square"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
-                              </ul>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Contact -->
-              <div id="contact" class="tab-pane fade">
-                <div class="profile-main">
-                  <h3>Contact the Company</h3>
-                  <div class="profile-in">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate quis tenetur velit! Provident eum molestias aperiam suscipit distinctio ipsum cupiditate quasi, dolor sunt, cum reprehenderit quibusdam, repellendus eaque, quas magni.</p>
-                    <form action="#">
-                      <input type="text" placeholder="Name & Surname">
-                      <input type="text" placeholder="E-mail address">
-                      <input type="text" placeholder="Phone Number">
-                      <textarea placeholder="Your Message"></textarea>
-                      <button class="btn btn-primary">Send message</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Portfolio -->
-              <div id="portfolio" class="tab-pane fade">
-                <div class="profile-main">
-                  <h3>Portfolio</h3>
-                  <div class="profile-in">
-                    <div class="uou-portfolio"> 
-                      <!-- Portfolio Item -->
-                      <section class="portfolio">
-                        <div class="portfolio-filters-content"> 
-                          <!-- Portfolio Item -->
-                          <article class="development design"> <a href="img/portfolio-1.jpg" class="swipebox"> <img src="img/portfolio-1.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="design"> <a href="img/portfolio-2.jpg" class="swipebox"> <img src="img/portfolio-2.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="development branding"> <a href="img/portfolio-3.jpg" class="swipebox"> <img src="img/portfolio-3.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="development design"> <a href="img/portfolio-6.jpg" class="swipebox"> <img src="img/portfolio-6.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="branding development"> <a href="img/portfolio-4.jpg" class="swipebox"> <img src="img/portfolio-4.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="mobile branding"> <a href="img/portfolio-5.jpg" class="swipebox"> <img src="img/portfolio-5.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="branding"> <a href="img/portfolio-7.jpg" class="swipebox"> <img src="img/portfolio-7.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="branding"> <a href="img/portfolio-2.jpg" class="swipebox"> <img src="img/portfolio-2.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                          <!-- Portfolio Item -->
-                          <article class="design development"> <a href="img/portfolio-8.jpg" class="swipebox"> <img src="img/portfolio-8.jpg" alt="" class="work img-responsive"> <span class="overlay"> <i class="fa fa-plus"></i> <b class="title"><strong>Photo Session</strong>Brands</b> </span> </a> </article>
-                        </div>
-                      </section>
-                    </div>
-                    <!-- end uou-portfolio --> 
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Blog Post -->
-              <div id="blog-tab" class="tab-pane fade">
-                <div class="profile-main">
-                  <h3>Blog Post</h3>
-                  <div class="profile-in">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <article class="uou-block-7f"> <img src="img/blog-image-1.jpg" alt="" class="thumb">
-                          <div class="meta"> <span class="time-ago">3 days ago</span> <span class="category">Posted in: <a href="#">Design</a></span> <a href="#" class="comments">12 Comments</a> </div>
-                          <h1><a href="#">Perspiciatis Sint Pariatur Velit Corrupti</a></h1>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.</p>
-                          <a href="#" class="btn btn-small btn-primary">Read More</a> </article>
-                        <!-- end .uou-block-7f -->
-                        
-                        <article class="uou-block-7f"> <img src="img/blog-image-2.jpg" alt="" class="thumb">
-                          <div class="meta"> <span class="time-ago">3 days ago</span> <span class="category">Posted in: <a href="#">Design</a></span> <a href="#" class="comments">12 Comments</a> </div>
-                          <h1><a href="#">Perspiciatis Sint Pariatur Velit Corrupti</a></h1>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.</p>
-                          <a href="#" class="btn btn-small btn-primary">Read More</a> </article>
-                        <!-- end .uou-block-7f -->
-                        
-                        <article class="uou-block-7f"> <img src="img/blog-image-3.jpg" alt="" class="thumb">
-                          <div class="meta"> <span class="time-ago">3 days ago</span> <span class="category">Posted in: <a href="#">Design</a></span> <a href="#" class="comments">12 Comments</a> </div>
-                          <h1><a href="#">Perspiciatis Sint Pariatur Velit Corrupti</a></h1>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.</p>
-                          <a href="#" class="btn btn-small btn-primary">Read More</a> </article>
-                        <!-- end .uou-block-7f -->
-                        
-                        <article class="uou-block-7f"> <img src="img/blog-image-4.jpg" alt="" class="thumb">
-                          <div class="meta"> <span class="time-ago">3 days ago</span> <span class="category">Posted in: <a href="#">Design</a></span> <a href="#" class="comments">12 Comments</a> </div>
-                          <h1><a href="#">Perspiciatis Sint Pariatur Velit Corrupti</a></h1>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.</p>
-                          <a href="#" class="btn btn-small btn-primary">Read More</a> </article>
-                        <!-- end .uou-block-7f -->
-                        
-                        <article class="uou-block-7f"> <img src="img/blog-image-5.jpg" alt="" class="thumb">
-                          <div class="meta"> <span class="time-ago">3 days ago</span> <span class="category">Posted in: <a href="#">Design</a></span> <a href="#" class="comments">12 Comments</a> </div>
-                          <h1><a href="#">Perspiciatis Sint Pariatur Velit Corrupti</a></h1>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi. Cras vel lorem. Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.
-                            Etiam pellentesque aliquet tellus. Phasellus pharetra nulla ac diam.</p>
-                          <a href="#" class="btn btn-small btn-primary">Read More</a> </article>
-                        <!-- end .uou-block-7f -->
-                        
-                        <div class="text-center pt20">
-                          <ul class="uou-paginatin list-unstyled">
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- end row --> 
-                    
-                    <!-- end blog-content --> 
-                    
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Blog Post -->
+          
               <div id="Con-tab" class="tab-pane fade">
                 <div class="profile-main">
-                  <h3>People in Connections</h3>
+                  <h3 style="color: black">People in Connections</h3>
                   <div class="profile-in">
                     <div class="folow-persons">
                       <ul>
-                        
+                        <c:forEach items="${connections}" var="record" varStatus="recordIndex">
                         <!-- MEMBER -->
                         <li>
                           <div class="row">
-                            <div class="col-xs-4"> 
+                          <form class="form-horizontal" name="saveUser" action="saveUser"
+					method="GET">
+					<fieldset>
+							
+							 <div class="col-xs-4"> 
                               <!-- Check Box -->
                               <div class="checkbox">
                                 <input id="checkbox1-1" class="styled" type="checkbox">
@@ -582,541 +549,26 @@
                               <!-- Name -->
                               <div class="fol-name">
                                 <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
+                                <h6 style="color: black">${record.fullName}</h6>
+                                <span>${record.currentOrg}</span> </div>
                             </div>
                             <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
+                            <div class="col-xs-3 n-p-r n-p-l"> <span>${record.city},${record.state},${record.country}</span> </div>
                             <!-- Network -->
                             <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
                             <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
+                            <div class="col-xs-2 n-p-r n-p-l"> <span>${record.noOfConnections} Connections</span> </div>
+							
+							
+							</fieldset>
+					</form>
+                          
+                          
+                           
                           </div>
                         </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-2" class="styled" type="checkbox">
-                                <label for="checkbox1-2"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-3" class="styled" type="checkbox">
-                                <label for="checkbox1-3"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-4" class="styled" type="checkbox">
-                                <label for="checkbox1-4"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-5" class="styled" type="checkbox">
-                                <label for="checkbox1-5"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-6" class="styled" type="checkbox">
-                                <label for="checkbox1-6"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox1-7" class="styled" type="checkbox">
-                                <label for="checkbox1-7"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Blog Post -->
-              <div id="flowrs-tabs" class="tab-pane fade">
-                <div class="profile-main">
-                  <h3>Followers</h3>
-                  <div class="profile-in">
-                    <div class="folow-persons">
-                      <ul>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row">
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-1" class="styled" type="checkbox">
-                                <label for="checkbox2-1"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-2" class="styled" type="checkbox">
-                                <label for="checkbox2-2"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-3" class="styled" type="checkbox">
-                                <label for="checkbox2-3"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-4" class="styled" type="checkbox">
-                                <label for="checkbox2-4"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-5" class="styled" type="checkbox">
-                                <label for="checkbox2-5"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-6" class="styled" type="checkbox">
-                                <label for="checkbox2-6"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox2-7" class="styled" type="checkbox">
-                                <label for="checkbox2-7"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Blog Post -->
-              <div id="foll-tabs" class="tab-pane fade">
-                <div class="profile-main">
-                  <h3>Following</h3>
-                  <div class="profile-in">
-                    <div class="folow-persons">
-                      <ul>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row">
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-1" class="styled" type="checkbox">
-                                <label for="checkbox3-1"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-2" class="styled" type="checkbox">
-                                <label for="checkbox3-2"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-3" class="styled" type="checkbox">
-                                <label for="checkbox3-3"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-4" class="styled" type="checkbox">
-                                <label for="checkbox3-4"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-5" class="styled" type="checkbox">
-                                <label for="checkbox3-5"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-6" class="styled" type="checkbox">
-                                <label for="checkbox3-6"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
-                        
-                        <!-- MEMBER -->
-                        <li>
-                          <div class="row"> 
-                            <!-- Title -->
-                            <div class="col-xs-4"> 
-                              <!-- Check Box -->
-                              <div class="checkbox">
-                                <input id="checkbox3-7" class="styled" type="checkbox">
-                                <label for="checkbox3-7"></label>
-                              </div>
-                              <!-- Name -->
-                              <div class="fol-name">
-                                <div class="avatar"> <img src="images/sm-avatar.jpg" alt=""> </div>
-                                <h6>Collin Weiland</h6>
-                                <span>Web Developer</span> </div>
-                            </div>
-                            <!-- Location -->
-                            <div class="col-xs-3 n-p-r n-p-l"> <span>San Francisco, USA</span> </div>
-                            <!-- Network -->
-                            <div class="col-xs-3 n-p-r"> <span>21 Followers</span> <span>10 Following</span> </div>
-                            <!-- Connections -->
-                            <div class="col-xs-2 n-p-r n-p-l"> <span>31 Connections</span> </div>
-                          </div>
-                        </li>
+                        </c:forEach>
+                       
                       </ul>
                     </div>
                   </div>
@@ -1130,52 +582,6 @@
   </div>
 </div>
 
-<!-- Footer -->
-<div class="uou-block-4e">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 col-sm-6"> <a href="#" class="logo"><img src="images/logo.png" alt=""></a>
-        <ul class="contact-info has-bg-image contain" data-bg-image="images/footer-map-bg.png">
-          <li> <i class="fa fa-map-marker"></i>
-            <address>
-            795 Folsom Ave, Suite 600, San Francisco, CA 94107
-            </address>
-          </li>
-          <li> <i class="fa fa-phone"></i> <a href="tel:#">(123) 456-7890</a> </li>
-          <li> <i class="fa fa-envelope"></i> <a href="mailto:#">first.last@example.com</a> </li>
-        </ul>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <h5>Twitter Feed</h5>
-        <ul class="twitter-feed">
-          <li> RT <a href="#">@no1son</a>: Now this <a href="#">http://t.co/TSfMW1qMAW</a> is one hell of a stunning site!!! Awesome work guys <a href="#">@AIRNAUTS</a> <a href="#" class="time">May 25</a> </li>
-          <li> Check out the wordpress version of Tucson - <a href="#">http://t.co/sBlU3GbapT</a> <a href="#" class="time">May 22</a> </li>
-        </ul>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <h5>Photostream</h5>
-        <ul class="photos-list">
-          <li><img src="images/photostream4.jpg" alt=""></li>
-          <li><img src="images/photostream6.jpg" alt=""></li>
-          <li><img src="images/photostream3.jpg" alt=""></li>
-          <li><img src="images/photostream2.jpg" alt=""></li>
-          <li><img src="images/photostream1.jpg" alt=""></li>
-          <li><img src="images/photostream.jpg" alt=""></li>
-        </ul>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <h5>Newsletter</h5>
-        <p>Subscribe to our newsletter to receive our latest news and updates. We do not spam.</p>
-        <form class="newsletter-form" action="#">
-          <input type="email" placeholder="Enter your email address">
-          <input type="submit" class="btn btn-primary" value="Subscribe">
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end .uou-block-4e -->
-
 <div class="uou-block-4a secondary dark">
   <div class="container">
     <ul class="links">
@@ -1187,46 +593,201 @@
 </div>
 <!-- end .uou-block-4a --> 
 
-<div class="uou-block-11a">
-  <h5 class="title">Menu</h5>
-  <a href="#" class="mobile-sidebar-close">&times;</a>
-  <nav class="main-nav">
-    <ul>
-      <li><a href="index.html">Index</a></li>
-      <li><a href="listing-filter.html">Professionals</a> </li>
-      <li><a href="profile_company.html">Profile Company</a></li>
-      <li><a href="profile_company-no-tabs.html">Profile Company No Tabs</a></li>
-      <li><a href="user-dashboard(connections)(hotkeys-disabled).html">User Dashboard 1</a></li>
-      <li><a href="user-dashboard(connections)(hotkeys-enabled).html">User Dashboard 2</a></li>
-      <li><a href="user-dashboard(followers).html">User Dashboard 3</a></li>
-      <li><a href="user-dashboard(following).html">User Dashboard 4</a></li>
-      <li><a href="blog-post.html">Blog Post</a></li>
-      <li class="active"><a href="user-profile(layout-1).html">User Profile</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="gui-kit.html">GUI KIT</a></li>
-    </ul>
-  </nav>
-  <hr>
-</div>
-
 <!-- Scripts --> 
 <script src="https://maps.googleapis.com/maps/api/js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery-2.1.3.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/bootstrap.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/superfish.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery.ui.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/rangeslider.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery.flexslider-min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/uou-accordions.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/uou-tabs.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/select2.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/owl.carousel.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/gmap3.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/scripts.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery-2.1.3.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/bootstrap.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/superfish.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery.ui.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/rangeslider.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery.flexslider-min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/uou-accordions.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/uou-tabs.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/select2.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/owl.carousel.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/gmap3.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/scripts.js"></script> 
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
+
+
+
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
-</script>
+
+$(function(){
+	if("${user.bgImageLink}" != ''){
+		   $('.user-profile-bnr').css("background", "url(/iappreciateyou/static/images/profile-bg/${user.bgImageLink}.jpg) no-repeat");
+		   $('.user-profile-bnr').css("background-size", "cover");
+	}
+	
+	if("${user.profileImageLink}" == ''){
+		if("${user.sex}" == 'male'){
+			$("#profile-img").attr("src","/iappreciateyou/static/images/profile/male-template.png");			
+		}else{
+			$("#profile-img").attr("src","/iappreciateyou/static/images/profile/female-template.png");
+		}
+	}else{
+		$("#profile-img").attr("src","/iappreciateyou/static/images/profile/${user.profileImageLink}.jpg");
+	}
+	
+	$( "a.main-mem" ).each(function( i ) {
+		  var id = $( this ).attr('id');
+		  id = id.replace("_b","");
+		  id = "#"+id;
+		  var val = $(id).val();
+		  if(val == '0'){
+			  
+		  }else{
+			  $( this ).toggleClass( "btn btn-success" );
+		  }
+	  });
+	
+});
+
+$('.upload').click(function(){
+    $('input[type=file]').click();
+    return false;
+});
+
+$('input[type=file]').change(function() {
+    $('#myForm').submit();
+});
+
+$('.logout').click(function(){
+	$('#logoutForm').submit();
+});
+
+
+$( "a.main-mem" ).click(function() {
+	  $( this ).toggleClass( "btn btn-success" );
+	  var id = $( this ).attr('id');
+	  id = id.replace("_b","");
+	  id = "#"+id;
+	  var val = $(id).val();
+	  if(val == '0'){
+		  $(id).val('1');
+	  }else{
+		  $(id).val('0');
+	  }
+	});
+	
+	function loadCss(){
+		$( "a.main-mem" ).each(function( i ) {
+			  var id = $( this ).attr('id');
+			  id = id.replace("_b","");
+			  id = "#"+id;
+			  var val = $(id).val();
+			  if(val == '0'){
+				  
+			  }else{
+				  
+				  var class_v = $( this ).attr('class');
+				  
+				  if(!class_v.includes('btn btn-success')){
+					  $( this ).toggleClass( "btn btn-success" );					  
+				  }
+
+			  }
+		  });
+		
+	};
+	$( "a.main-mem" ).each(function( i ) {
+		  var id = $( this ).attr('id');
+		  id = id.replace("_b","");
+		  id = "#"+id;
+		  var val = $(id).val();
+		  if(val == '0'){
+			  
+		  }else{
+			  $( this ).toggleClass( "btn btn-success" );
+		  }
+	  });
+	
+	function updateRecord(post){
+		alert(post);
+		window.location.href="/iappreciateyou/savePost?post="+post;
+	};
+	
+	
+$(document).ready(function () {
+	
+ $( "#email_val" ).autocomplete({
+    source: function( request, response ) {
+    	$.ajax({
+    	    url: "/iappreciateyou/getAllConnections",
+    	    dataType: "json",
+    	    data: {
+    	        term: request.term
+    	    },
+    	    success: function (data) {
+    	        response($.map(data, function (user) {
+    	            return {
+    	                value: user.fullName + '<'+user.emailAddress+'>',
+    	                id:user.userId
+    	            };
+    	        }));
+    	    }
+    	});
+    },
+    minLength: 1,
+    select: function( event, ui ) {
+      console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+      $('#email_val_id').val(ui.item.id);
+      console.log($('#email_val_id').val());
+    }
+  } ); 
+ 
+	$( "#connectEmail" ).autocomplete({
+	    source: function( request, response ) {
+	    	$.ajax({
+	    	    url: "/iappreciateyou/getAllUsers",
+	    	    dataType: "json",
+	    	    data: {
+	    	        term: request.term
+	    	    },
+	    	    success: function (data) {
+	    	        response($.map(data, function (user) {
+	    	            return {
+	    	                value: user.fullName + '<'+user.emailAddress+'>',
+	    	                id:user.userId
+	    	            };
+	    	        }));
+	    	    }
+	    	});
+	    },
+	    minLength: 1,
+	    select: function( event, ui ) {
+	      console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+	      $('#connectEmailId').val(ui.item.id);	
+	      console.log($('#connectEmailId').val());
+	    }
+	  } ); 
+	
+});
+
+ /* $(document).ready(function () {
+	 $("#email_val").change(function () {
+	     
+	         jQuery.ajax({
+	             url: "/iappreciateyou/getAllConnections?term="+ $("#email_val").val(),
+	            		 
+	            
+	             success: function (data) {
+	                 alert(data + "success");
+	                 $.each(data, function(index, user) {
+	                     console.log(user.fullName); //to print name of employee
+	                 });  
+	             },
+	             error: function (data) {
+	                 alert(data + "error");
+	             }
+	         });
+	     
+	 });
+ }); */
+	 </script>
 </body>
 </html>

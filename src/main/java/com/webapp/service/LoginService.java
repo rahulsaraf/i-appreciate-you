@@ -67,8 +67,8 @@ public class LoginService {
 	       return user;
 	}
 	
-	public String registerUser( String email, String password, String fullName, String phone){
-		String action = "register?emailAddress="+email.trim()+"&password="+password+"&fullName="+fullName.trim().replace(" ", "%20")+"&phoneNumber="+phone.trim();
+	public String registerUser( String email, String password, String fullName, String phone, String sex, String city){
+		String action = "register?emailAddress="+email.trim()+"&password="+password+"&fullName="+fullName.trim().replace(" ", "%20")+"&phoneNumber="+phone.trim()+"&sex="+sex.trim()+"&city="+city.trim().replace(" ", "%20");
 		InputStream in = conn.getConnection(action, "GET");
 		String outputString = "";
 	       try{

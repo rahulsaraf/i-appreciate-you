@@ -16,9 +16,9 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
 <!-- Style Sheet -->
-<link rel="stylesheet" href="/iappreaciateyou/static/css/owl.carousel.css">
-<link rel="stylesheet" href="/iappreaciateyou/static/css/main-style.css">
-<link rel="stylesheet" href="/iappreaciateyou/static/css/style.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/owl.carousel.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/main-style.css">
+<link rel="stylesheet" href="/iappreciateyou/static/css/style.css">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -33,7 +33,7 @@
 <div id="main-wrapper"> 
   <div class="box-shadow-for-ui">
     <div class="uou-block-2b">
-      <div class="container"> <a href="#" class="logo"><img src="/iappreaciateyou/static/images/logo.png" alt=""></a> <a href="#" class="mobile-sidebar-button mobile-sidebar-toggle"><span></span></a>
+      <div class="container"> <a href="#" class="logo"><img src="/iappreciateyou/static/images/logo.png" alt=""></a> <a href="#" class="mobile-sidebar-button mobile-sidebar-toggle"><span></span></a>
       </div>
     </div>
     <!-- end .uou-block-2b --> 
@@ -85,6 +85,12 @@
                       <input type="text" placeholder="Full Name" name="full_name" required="">
                       <input type="email" placeholder="Email Address" name="email" required="">
                       <input type="text" placeholder="Phone" name="phone_num">
+                      <input id="city" type="text" placeholder="City" name="city">
+                       	 <select name="sex">
+    						<option value="male">Male</option>
+						    <option value="female">Female</option>
+						    <option value="other">Other</option>
+						  </select>
                       <input type="password" placeholder="Password" name="password" required="">
                       <button type="submit">Register</button>
                       <div class="login-with"> <span>Or login with:</span> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-google"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> </div>
@@ -133,7 +139,6 @@
 </div>
 
 
-
 <div class="uou-block-4a secondary dark">
   <div class="container">
     <ul class="links">
@@ -169,19 +174,21 @@
 
 <!-- Scripts --> 
 <script src="https://maps.googleapis.com/maps/api/js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery-2.1.3.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/bootstrap.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/superfish.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery.ui.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/rangeslider.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/jquery.flexslider-min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/uou-accordions.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/uou-tabs.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/select2.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/owl.carousel.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/gmap3.min.js"></script> 
-<script src="/iappreaciateyou/static/scripts/js/scripts.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery-2.1.3.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/bootstrap.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/superfish.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery.ui.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/rangeslider.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/jquery.flexslider-min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/uou-accordions.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/uou-tabs.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/select2.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/owl.carousel.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/gmap3.min.js"></script> 
+<script src="/iappreciateyou/static/scripts/js/scripts.js"></script> 
  <script src="https://apis.google.com/js/platform.js" async defer></script>
+ <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 <script>
 	function onSignIn(googleUser) {
 		  var profile = googleUser.getBasicProfile();
@@ -196,7 +203,39 @@
 	});
 	
 	
-	
+	$(function() {
+    
+
+    $( "#city" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://gd.geobytes.com/AutoCompleteCity",
+          dataType: "jsonp",
+          data: {
+            q: request.term
+          },
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        console.log( ui.item ?
+          "Selected: " + ui.item.label :
+          "Nothing selected, input was " + this.value);
+        
+        
+        
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+  });
 </script>
 </body>
 </html>

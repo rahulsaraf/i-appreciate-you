@@ -17,6 +17,14 @@ public class User {
 	private String password;
 	private String profileImageLink;
 	private Date dateOfBirth;
+	private String currentOrg;
+	private String bgImageLink;
+	private String sex;
+	private Long userId;
+	private int noOfConnections;
+	private String city;
+	private String state;
+	private String country;
 	public String getFullName() {
 		return fullName;
 	}
@@ -53,4 +61,54 @@ public class User {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
+	public String getCurrentOrg() {
+		return currentOrg;
+	}
+	public void setCurrentOrg(String currentOrg) {
+		this.currentOrg = currentOrg;
+	}
+	public String getBgImageLink() {
+		return bgImageLink;
+	}
+	public void setBgImageLink(String bgImageLink) {
+		this.bgImageLink = bgImageLink;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public int getNoOfConnections() {
+		return noOfConnections;
+	}
+	public void setNoOfConnections(int noOfConnections) {
+		this.noOfConnections = noOfConnections;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	
+	
 }
